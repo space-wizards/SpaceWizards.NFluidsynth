@@ -53,7 +53,16 @@ namespace NFluidsynth.Tests
             using (var syn = new Synth(NewAlsaSettings()))
             using (var audio = new AudioDriver(syn.Settings, syn))
             {
-                syn.LoadSoundFont("/usr/share/sounds/sf2/FluidR3_GS.sf2", false);
+                const string SOUND_FONT_UBUNTU_14_04 = "/usr/share/sounds/sf2/FluidR3_GS.sf2";
+                const string SOUND_FONT_UBUNTU_22_10 = "/usr/share/sounds/sf2/FluidR3_GM.sf2";
+                if (File.Exists(SOUND_FONT_UBUNTU_14_04))
+                    syn.LoadSoundFont(SOUND_FONT_UBUNTU_14_04, false);
+                else if (File.Exists(SOUND_FONT_UBUNTU_22_10))
+                    syn.LoadSoundFont(SOUND_FONT_UBUNTU_22_10, false);
+                else
+                {
+                    Assert.Fail("No system sound font file found.");
+                }
                 Assert.AreEqual(1, syn.FontCount, "FontCount");
                 for (int i = 0; i < 16; i++)
                     syn.SoundFontSelect(i, 1);

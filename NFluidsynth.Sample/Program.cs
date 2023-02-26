@@ -2,6 +2,7 @@
 using NFluidsynth;
 using System.Threading;
 using System.Linq;
+using System.IO;
 
 namespace NFluidsynth.Sample
 {
@@ -21,7 +22,19 @@ namespace NFluidsynth.Sample
                         if (SoundFont.IsSoundFont(arg))
                             syn.LoadSoundFont(arg, true);
                     if (syn.FontCount == 0)
-                        syn.LoadSoundFont("/usr/share/sounds/sf2/FluidR3_GM.sf2", true);
+                    {                        
+                        const string SOUND_FONT_UBUNTU_14_04 = "/usr/share/sounds/sf2/FluidR3_GS.sf2";
+                        const string SOUND_FONT_UBUNTU_22_10 = "/usr/share/sounds/sf2/FluidR3_GM.sf2";
+                        if (File.Exists(SOUND_FONT_UBUNTU_14_04))
+                            syn.LoadSoundFont(SOUND_FONT_UBUNTU_14_04, true);
+                        else if (File.Exists(SOUND_FONT_UBUNTU_22_10))
+                            syn.LoadSoundFont(SOUND_FONT_UBUNTU_22_10, true);
+                        else
+                        {
+                            System.Console.WriteLine("No system sound font file found.");
+                            return;
+                        }
+                    }
                     for (int i = 0; i < 16; i++)
                         syn.SoundFontSelect(i, 0);
                     var files = args.Where(SoundFont.IsMidiFile);
