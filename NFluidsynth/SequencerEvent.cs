@@ -100,21 +100,29 @@ namespace NFluidsynth
             }
         }
 
-        public short Value
+        public int Value
         {
             get
             {
                 ThrowIfDisposed();
-                return LibFluidsynth.fluid_event_get_value(Handle);
+
+                if (LibFluidsynth.LibraryVersion == 2)
+                    return LibFluidsynth.fluid_event_get_value_2(Handle);
+                else 
+                    return LibFluidsynth.fluid_event_get_value_3(Handle);
             }
         }
 
-        public short Program
+        public int Program
         {
             get
             {
                 ThrowIfDisposed();
-                return LibFluidsynth.fluid_event_get_program(Handle);
+
+                if (LibFluidsynth.LibraryVersion == 2)
+                    return LibFluidsynth.fluid_event_get_program_2(Handle);
+                else
+                    return LibFluidsynth.fluid_event_get_program_3(Handle);
             }
         }
 
@@ -208,7 +216,11 @@ namespace NFluidsynth
         public void ProgramChange(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_program_change(Handle, channel, val);
+            
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_program_change_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_program_change_3(Handle, channel, val);
         }
 
         public void ProgramSelect(int channel, uint soundFontId, short bankNum, short presetNum)
@@ -220,7 +232,11 @@ namespace NFluidsynth
         public void ControlChange(int channel, short control, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_control_change(Handle, channel, control, val);
+            
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_control_change_2(Handle, channel, control, val);
+            else
+                LibFluidsynth.fluid_event_control_change_3(Handle, channel, control, val);
         }
 
         public void PitchBend(int channel, int pitch)
@@ -232,67 +248,97 @@ namespace NFluidsynth
         public void PitchWheelSensitivity(int channel, short value)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_pitch_wheelsens(Handle, channel, value);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_pitch_wheelsens_2(Handle, channel, value);
+            else
+                LibFluidsynth.fluid_event_pitch_wheelsens_3(Handle, channel, value);
         }
 
         public void Modulation(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_modulation(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_modulation_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_modulation_3(Handle, channel, val);
         }
 
         public void Sustain(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_sustain(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_sustain_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_sustain_3(Handle, channel, val);
         }
 
         public void Pan(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_pan(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_pan_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_pan_3(Handle, channel, val);
         }
 
         public void Volume(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_volume(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_volume_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_volume_3(Handle, channel, val);
         }
 
         public void ReverbSend(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_reverb_send(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_reverb_send_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_reverb_send_3(Handle, channel, val);
         }
 
         public void ChorusSend(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_chorus_send(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_chorus_send_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_chorus_send_3(Handle, channel, val);
         }
 
         public void KeyPressure(int channel, short key, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_key_pressure(Handle, channel, key, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_key_pressure_2(Handle, channel, key, val);
+            else
+                LibFluidsynth.fluid_event_key_pressure_3(Handle, channel, key, val);
         }
 
         public void ChannelPressure(int channel, short val)
         {
             ThrowIfDisposed();
-            LibFluidsynth.fluid_event_channel_pressure(Handle, channel, val);
+
+            if (LibFluidsynth.LibraryVersion == 2)
+                LibFluidsynth.fluid_event_channel_pressure_2(Handle, channel, val);
+            else
+                LibFluidsynth.fluid_event_channel_pressure_3(Handle, channel, val);
         }
 
         public void SystemReset()
         {
             ThrowIfDisposed();
             LibFluidsynth.fluid_event_system_reset(Handle);
-        }
-
-        public void AnyControlChange(int channel)
-        {
-            ThrowIfDisposed();
-            LibFluidsynth.fluid_event_any_control_change(Handle, channel);
         }
 
         public void Unregistering()

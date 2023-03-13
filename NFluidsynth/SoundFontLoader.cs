@@ -18,15 +18,18 @@ namespace NFluidsynth
         // used as fluid_sfloader_callback_read_t
         public abstract int Read(IntPtr buf, long count, IntPtr sfHandle);
 
-        public int Read(IntPtr buf, int count, IntPtr sfHandle) => Read(buf, (long) count, sfHandle);
+        public int Read_2(IntPtr buf, int count, IntPtr sfHandle) => Read(buf, (long) count, sfHandle);
+        public int Read_3(IntPtr buf, long count, IntPtr sfHandle) => Read(buf, count, sfHandle);
 
         // used as fluid_sfloader_callback_seek_t
-        public abstract int Seek(IntPtr sfHandle, int offset, SeekOrigin origin);
+        public abstract int Seek(IntPtr sfHandle, long offset, SeekOrigin origin);
 
-        public int Seek(IntPtr sfHandle, int offset, int origin) => Seek(sfHandle, offset, (SeekOrigin) origin);
+        public int Seek_2(IntPtr sfHandle, int offset, int origin) => Seek(sfHandle, (long) offset, (SeekOrigin) origin);
+        public int Seek_3(IntPtr sfHandle, long offset, int origin) => Seek(sfHandle, offset, (SeekOrigin) origin);
 
         // used as fluid_sfloader_callback_tell_t
-        public abstract int Tell(IntPtr sfHandle);
+        public abstract long Tell(IntPtr sfHandle);
+        public int Tell_2(IntPtr sfHandle) { return (int) Tell(sfHandle); }
 
         // used as fluid_sfloader_callback_close_t
         public abstract int Close(IntPtr sfHandle);
@@ -38,9 +41,12 @@ namespace NFluidsynth
 
         // We keep these around so the GC doesn't eat them.
         private fluid_sfloader_callback_open_t _open;
-        private fluid_sfloader_callback_read_t _read;
-        private fluid_sfloader_callback_seek_t _seek;
-        private fluid_sfloader_callback_tell_t _tell;
+        private fluid_sfloader_callback_read_t_2 _read_2;
+        private fluid_sfloader_callback_read_t_3 _read_3;
+        private fluid_sfloader_callback_seek_t_2 _seek_2;
+        private fluid_sfloader_callback_seek_t_3 _seek_3;
+        private fluid_sfloader_callback_tell_t_2 _tell_2;
+        private fluid_sfloader_callback_tell_t_3 _tell_3;
         private fluid_sfloader_callback_close_t _close;
 
         public static SoundFontLoader NewDefaultSoundFontLoader(Settings settings)
@@ -62,12 +68,22 @@ namespace NFluidsynth
 
         public unsafe void SetCallbacks(SoundFontLoaderCallbacks callbacks)
         {
-            fluid_sfloader_set_callbacks(handle,
-                Utility.PassDelegatePointer(callbacks.Open, out _open),
-                Utility.PassDelegatePointer(callbacks.Read, out _read),
-                Utility.PassDelegatePointer(callbacks.Seek, out _seek),
-                Utility.PassDelegatePointer(callbacks.Tell, out _tell),
-                Utility.PassDelegatePointer(callbacks.Close, out _close));
+            if (LibraryVersion == 2)
+            {
+                fluid_sfloader_set_callbacks(handle,
+                    Utility.PassDelegatePointer(callbacks.Open, out _open),
+                    Utility.PassDelegatePointer(callbacks.Read_2, out _read_2),
+                    Utility.PassDelegatePointer(callbacks.Seek_2, out _seek_2),
+                    Utility.PassDelegatePointer(callbacks.Tell_2, out _tell_2),
+                    Utility.PassDelegatePointer(callbacks.Close, out _close));
+            } else {
+                fluid_sfloader_set_callbacks(handle,
+                    Utility.PassDelegatePointer(callbacks.Open, out _open),
+                    Utility.PassDelegatePointer(callbacks.Read_3, out _read_3),
+                    Utility.PassDelegatePointer(callbacks.Seek_3, out _seek_3),
+                    Utility.PassDelegatePointer(callbacks.Tell, out _tell_3),
+                    Utility.PassDelegatePointer(callbacks.Close, out _close));
+            }
         }
 
         public virtual void Dispose()

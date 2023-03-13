@@ -26,13 +26,19 @@ namespace NFluidsynth.Native
 
         internal delegate IntPtr fluid_sfloader_callback_open_t(string filename);
 
-        internal delegate int fluid_sfloader_callback_read_t(IntPtr buf, int count, IntPtr handle);
+        internal delegate int fluid_sfloader_callback_read_t_2(IntPtr buf, int count, IntPtr handle);
 
-        internal delegate int fluid_sfloader_callback_seek_t(IntPtr handle, int offset, int origin);
+        internal delegate int fluid_sfloader_callback_read_t_3(IntPtr buf, long count, IntPtr handle);
+
+        internal delegate int fluid_sfloader_callback_seek_t_2(IntPtr handle, int offset, int origin);
+
+        internal delegate int fluid_sfloader_callback_seek_t_3(IntPtr handle, long offset, int origin);
 
         internal delegate int fluid_sfloader_callback_close_t(IntPtr handle);
 
-        internal delegate int fluid_sfloader_callback_tell_t(IntPtr handle);
+        internal delegate int fluid_sfloader_callback_tell_t_2(IntPtr handle);
+
+        internal delegate long fluid_sfloader_callback_tell_t_3(IntPtr handle);
 
         [DllImport(LibraryName)]
         internal static extern int fluid_sfloader_set_callbacks(fluid_sfloader_t_ptr loader,
