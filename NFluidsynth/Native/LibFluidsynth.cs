@@ -7,10 +7,8 @@ namespace NFluidsynth.Native
     {
         public const string LibraryName = "fluidsynth";
 
-        /**
-        * Supports both ABI 2 and ABI 3 of Fluid Synth
-        * https://abi-laboratory.pro/index.php?view=timeline&l=fluidsynth
-        */
+        // Supports both ABI 2 and ABI 3 of Fluid Synth
+        // https://abi-laboratory.pro/index.php?view=timeline&l=fluidsynth
         public static int LibraryVersion 
         { 
             get
