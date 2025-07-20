@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <Version>0.1.1</Version>
     <AssemblyName>SpaceWizards.NFluidsynth</AssemblyName>
     <RootNamespace>NFluidsynth</RootNamespace>

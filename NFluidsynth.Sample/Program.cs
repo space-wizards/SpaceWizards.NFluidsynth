@@ -1,70 +1,101 @@
 ﻿using System;
-using NFluidsynth;
 using System.Threading;
 using System.Linq;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace NFluidsynth.Sample
 {
-    public class Program
+    public static class Program
     {
+        private const string LINUX_GS_DEFAULT_SOUNDFONT = "/usr/share/sounds/sf2/FluidR3_GS.sf2";
+        private const string LINUX_GM_DEFAULT_SOUNDFONT = "/usr/share/sounds/sf2/FluidR3_GM.sf2";
+
+        private const string WINDOWS_GM_DEFAULT_SOUNDFONT = @"C:\WINDOWS\SYSTEM32\DRIVERS\GM.DLS";
+
+        // Is this even correct? Who knows. This is pulled from a random forum post.
+        // Someone with a Mac can check.
+        // Of course this is Apple so it probably changes directories randomly 
+        // just to mess with developers.
+        private const string OSX_GS_DEFAULT_SOUNDFONT =
+            "/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls";
+
         public static void Main(string[] args)
         {
             using (var settings = new Settings())
             {
-                // Change this if you don't have pulseaudio or want to change to anything else.
-                if (Environment.OSVersion.Platform == PlatformID.Unix)
-                    settings[ConfigurationKeys.AudioDriver].StringValue = "pulseaudio";
-                settings[ConfigurationKeys.SynthAudioChannels].IntValue = 2;
                 using (var syn = new Synth(settings))
                 {
-                    foreach (var arg in args)
-                        if (SoundFont.IsSoundFont(arg))
-                            syn.LoadSoundFont(arg, true);
-                    if (syn.FontCount == 0)
-                    {                        
-                        const string SOUND_FONT_UBUNTU_14_04 = "/usr/share/sounds/sf2/FluidR3_GS.sf2";
-                        const string SOUND_FONT_UBUNTU_22_10 = "/usr/share/sounds/sf2/FluidR3_GM.sf2";
-                        if (File.Exists(SOUND_FONT_UBUNTU_14_04))
-                            syn.LoadSoundFont(SOUND_FONT_UBUNTU_14_04, true);
-                        else if (File.Exists(SOUND_FONT_UBUNTU_22_10))
-                            syn.LoadSoundFont(SOUND_FONT_UBUNTU_22_10, true);
-                        else
-                        {
-                            System.Console.WriteLine("No system sound font file found.");
-                            return;
-                        }
+                    foreach (var arg in from arg in args where SoundFont.IsSoundFont(arg) select arg)
+                    {
+                        syn.LoadSoundFont(arg, true);
                     }
-                    for (int i = 0; i < 16; i++)
+
+                    if (syn.FontCount == 0 && !LoadDefaultSoundfont(syn))
+                        return;
+
+                    for (var i = 0; i < 16; i++)
                         syn.SoundFontSelect(i, 0);
-                    var files = args.Where(SoundFont.IsMidiFile);
-                    if (files.Any())
+
+                    var files = args.Where(SoundFont.IsMidiFile).ToList();
+
+                    if (files.Count == 0)
                     {
-                        foreach (var arg in files)
-                        {
-                            using (var player = new Player(syn))
-                            {
-                                using (var adriver = new AudioDriver(syn.Settings, syn))
-                                {
-                                    player.Add(arg);
-                                    player.Play();
-                                    player.Join();
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (var adriver = new AudioDriver(syn.Settings, syn))
+                        using (new AudioDriver(syn.Settings, syn))
                         {
                             syn.ProgramChange(0, 1);
                             syn.NoteOn(0, 60, 120);
-                            Thread.Sleep(5000);
+                            Thread.Sleep(500);
                             syn.NoteOff(0, 60);
+                        }
+
+                        return;
+                    }
+
+                    foreach (var arg in files)
+                    {
+                        using (var player = new Player(syn))
+                        {
+                            using (new AudioDriver(syn.Settings, syn))
+                            {
+                                player.Add(arg);
+                                player.Play();
+                                player.Join();
+                            }
                         }
                     }
                 }
             }
+        }
+
+        private static bool LoadDefaultSoundfont(Synth syn)
+        {
+            var soundfontPath = "";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                if (File.Exists(LINUX_GS_DEFAULT_SOUNDFONT))
+                    soundfontPath = LINUX_GS_DEFAULT_SOUNDFONT;
+                else if (File.Exists(LINUX_GM_DEFAULT_SOUNDFONT))
+                    soundfontPath = LINUX_GM_DEFAULT_SOUNDFONT;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && File.Exists(OSX_GS_DEFAULT_SOUNDFONT))
+                soundfontPath = OSX_GS_DEFAULT_SOUNDFONT;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && File.Exists(WINDOWS_GM_DEFAULT_SOUNDFONT))
+                soundfontPath = WINDOWS_GM_DEFAULT_SOUNDFONT;
+
+            if (soundfontPath == "")
+            {
+                Console.WriteLine("No system sound font file found.");
+
+                return false;
+            }
+
+            syn.LoadSoundFont(soundfontPath, true);
+
+            return true;
         }
     }
 }

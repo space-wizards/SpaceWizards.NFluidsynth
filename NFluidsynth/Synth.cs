@@ -32,20 +32,17 @@ namespace NFluidsynth
         public void NoteOn(int channel, int key, int vel)
         {
             ThrowIfDisposed();
-            if (LibFluidsynth.fluid_synth_noteon(Handle, channel, key, vel) != 0)
-            {
-                OnError("noteon operation failed");
-            }
+
+            // This can return 1, representing FS not being able to action the command, but this is expected given MIDIs can be arbitrary;
+            LibFluidsynth.fluid_synth_noteon(Handle, channel, key, vel);
         }
 
         public void NoteOff(int channel, int key)
         {
             ThrowIfDisposed();
-            // not sure if we should always raise exception, it seems that it also returns FLUID_FAILED for not-on-state note.
-            if (LibFluidsynth.fluid_synth_noteoff(Handle, channel, key) != 0)
-            {
-                OnError("noteoff operation failed");
-            }
+
+            // This can return 1, representing FS not being able to action the command, but this is expected given MIDIs can be arbitrary.
+            LibFluidsynth.fluid_synth_noteoff(Handle, channel, key);
         }
 
         public void CC(int channel, int num, int val)
@@ -68,20 +65,21 @@ namespace NFluidsynth
             return ret;
         }
 
-        #if NETCOREAPP
-        public unsafe bool Sysex (ReadOnlySpan<byte> input, Span<byte> output, bool dryRun = false)
+#if NETCOREAPP
+        public unsafe bool Sysex(ReadOnlySpan<byte> input, Span<byte> output, bool dryRun = false)
         {
             fixed (byte* iPtr = input)
             fixed (byte* oPtr = output)
-                return Sysex ((IntPtr) iPtr, input.Length, (IntPtr) oPtr, output.Length, dryRun);
+                return Sysex((IntPtr)iPtr, input.Length, (IntPtr)oPtr, output.Length, dryRun);
         }
-        #endif
+#endif
 
-        public unsafe bool Sysex (byte [] input, int inputOffset, int inputLength, byte [] output, int outputOffset, int outputLength, bool dryRun = false)
+        public unsafe bool Sysex(byte[] input, int inputOffset, int inputLength, byte[] output, int outputOffset,
+            int outputLength, bool dryRun = false)
         {
             fixed (byte* iPtr = input)
             fixed (byte* oPtr = output)
-                return Sysex ((IntPtr) iPtr, inputLength, (IntPtr) oPtr, outputLength, dryRun);
+                return Sysex((IntPtr)iPtr, inputLength, (IntPtr)oPtr, outputLength, dryRun);
         }
 
         public bool Sysex(IntPtr input, int inputLength, IntPtr output, int outputLength, bool dryRun = false)
@@ -89,13 +87,17 @@ namespace NFluidsynth
             ThrowIfDisposed();
 
             int outLen = outputLength;
-            unsafe {
-                if (LibFluidsynth.fluid_synth_sysex (Handle, (byte*) input, inputLength, (byte*) output, ref outLen, out var handled, dryRun) != 0) {
-                    if (outLen != 0) {
-                        OnError ("Output buffer is too small");
+            unsafe
+            {
+                if (LibFluidsynth.fluid_synth_sysex(Handle, (byte*)input, inputLength, (byte*)output, ref outLen,
+                        out var handled, dryRun) != 0)
+                {
+                    if (outLen != 0)
+                    {
+                        OnError("Output buffer is too small");
                     }
 
-                    OnError ("sysex operation failed");
+                    OnError("sysex operation failed");
                 }
 
                 return handled;
@@ -268,7 +270,7 @@ namespace NFluidsynth
             if (result < 0)
                 OnError("sound font load operation failed");
 
-            return (uint) result;
+            return (uint)result;
         }
 
         public void ReloadSoundFont(uint id)
@@ -559,18 +561,19 @@ namespace NFluidsynth
 
         #region Tuning
 
-        #if NETCOREAPP
-        public unsafe void ActivateKeyTuning (int bank, int prog, string name, ReadOnlySpan<double> pitch, bool apply)
+#if NETCOREAPP
+        public unsafe void ActivateKeyTuning(int bank, int prog, string name, ReadOnlySpan<double> pitch, bool apply)
         {
             fixed (double* pPtr = pitch)
-                ActivateKeyTuning (bank, prog, name, (IntPtr) pPtr, pitch.Length, apply);
+                ActivateKeyTuning(bank, prog, name, (IntPtr)pPtr, pitch.Length, apply);
         }
-        #endif
+#endif
 
-        public unsafe void ActivateKeyTuning (int bank, int prog, string name, double [] pitch, int pitchOffset, int pitchLength, bool apply)
+        public unsafe void ActivateKeyTuning(int bank, int prog, string name, double[] pitch, int pitchOffset,
+            int pitchLength, bool apply)
         {
             fixed (double* pPtr = pitch)
-                ActivateKeyTuning (bank, prog, name, (IntPtr) (pPtr + pitchOffset), pitchLength, apply);
+                ActivateKeyTuning(bank, prog, name, (IntPtr)(pPtr + pitchOffset), pitchLength, apply);
         }
 
         public void ActivateKeyTuning(int bank, int prog, string name, IntPtr pitch, int pitchLength, bool apply)
@@ -583,26 +586,27 @@ namespace NFluidsynth
 
             unsafe
             {
-                if (LibFluidsynth.fluid_synth_activate_key_tuning(Handle, bank, prog, name, (double*) pitch, apply) != 0)
+                if (LibFluidsynth.fluid_synth_activate_key_tuning(Handle, bank, prog, name, (double*)pitch, apply) != 0)
                 {
                     OnError("key tuning create operation failed");
                 }
             }
         }
 
-        #if NETCOREAPP
-        public unsafe void ActivateOctaveTuning (int bank, int prog, string name, ReadOnlySpan<double> pitch,
+#if NETCOREAPP
+        public unsafe void ActivateOctaveTuning(int bank, int prog, string name, ReadOnlySpan<double> pitch,
             bool apply)
         {
             fixed (double* pPtr = pitch)
-                ActivateOctaveTuning (bank, prog, name, (IntPtr) pPtr, pitch.Length, apply);
+                ActivateOctaveTuning(bank, prog, name, (IntPtr)pPtr, pitch.Length, apply);
         }
-        #endif
+#endif
 
-        public unsafe void ActivateOctaveTuning (int bank, int prog, string name, double [] pitch, int pitchOffset, int pitchLength, bool apply)
+        public unsafe void ActivateOctaveTuning(int bank, int prog, string name, double[] pitch, int pitchOffset,
+            int pitchLength, bool apply)
         {
             fixed (double* pPtr = pitch)
-                ActivateOctaveTuning (bank, prog, name, (IntPtr) (pPtr + pitchOffset), pitchLength, apply);
+                ActivateOctaveTuning(bank, prog, name, (IntPtr)(pPtr + pitchOffset), pitchLength, apply);
         }
 
         public void ActivateOctaveTuning(int bank, int prog, string name, IntPtr pitch, int pitchLength, bool apply)
@@ -615,30 +619,34 @@ namespace NFluidsynth
 
             unsafe
             {
-                if (LibFluidsynth.fluid_synth_activate_octave_tuning(Handle, bank, prog, name, (double*) pitch, apply) != 0)
+                if (LibFluidsynth.fluid_synth_activate_octave_tuning(Handle, bank, prog, name, (double*)pitch, apply) !=
+                    0)
                     OnError("key tuning create operation failed");
             }
         }
 
-        #if NETCOREAPP
-        public unsafe void TuneNotes (int bank, int prog, ReadOnlySpan<int> keys, ReadOnlySpan<double> pitch,
+#if NETCOREAPP
+        public unsafe void TuneNotes(int bank, int prog, ReadOnlySpan<int> keys, ReadOnlySpan<double> pitch,
             bool apply)
         {
             fixed (int* kPtr = keys)
             fixed (double* pPtr = pitch)
-                TuneNotes (bank, prog, (IntPtr) kPtr, keys.Length, (IntPtr) pPtr, pitch.Length, apply);
+                TuneNotes(bank, prog, (IntPtr)kPtr, keys.Length, (IntPtr)pPtr, pitch.Length, apply);
         }
-        #endif
+#endif
 
-        public unsafe void TuneNotes (int bank, int prog, int [] keys, int keysOffset, int keysLength, double [] pitch, int pitchOffset, int pitchLength,
+        public unsafe void TuneNotes(int bank, int prog, int[] keys, int keysOffset, int keysLength, double[] pitch,
+            int pitchOffset, int pitchLength,
             bool apply)
         {
             fixed (int* kPtr = keys)
             fixed (double* pPtr = pitch)
-                TuneNotes (bank, prog, (IntPtr) (kPtr + keysOffset), keysLength, (IntPtr) (pPtr + pitchOffset), pitchLength, apply);
+                TuneNotes(bank, prog, (IntPtr)(kPtr + keysOffset), keysLength, (IntPtr)(pPtr + pitchOffset),
+                    pitchLength, apply);
         }
 
-        public void TuneNotes(int bank, int prog, IntPtr keys, int keysLength, IntPtr pitch, int pitchLength, bool apply)
+        public void TuneNotes(int bank, int prog, IntPtr keys, int keysLength, IntPtr pitch, int pitchLength,
+            bool apply)
         {
             ThrowIfDisposed();
             if (keysLength != 128)
@@ -653,7 +661,8 @@ namespace NFluidsynth
 
             unsafe
             {
-                if (LibFluidsynth.fluid_synth_tune_notes(Handle, bank, prog, keysLength, (int*) keys, (double*) pitch, apply) != 0)
+                if (LibFluidsynth.fluid_synth_tune_notes(Handle, bank, prog, keysLength, (int*)keys, (double*)pitch,
+                        apply) != 0)
                 {
                     OnError("key tuning create operation failed");
                 }
@@ -713,24 +722,25 @@ namespace NFluidsynth
             }
         }
 
-        #if NETCOREAPP
-        public unsafe void WriteSample16 (int count, Span<ushort> leftOut, int leftOffset, int leftIncrement,
+#if NETCOREAPP
+        public unsafe void WriteSample16(int count, Span<ushort> leftOut, int leftOffset, int leftIncrement,
             Span<ushort> rightOut, int rightOffset, int rightIncrement)
         {
             fixed (ushort* lPtr = leftOut)
             fixed (ushort* rPtr = rightOut)
-                WriteSample16 (count, (IntPtr) lPtr, leftOffset, leftOut.Length, leftIncrement,
-                    (IntPtr) rPtr, rightOffset, rightOut.Length, rightIncrement);
+                WriteSample16(count, (IntPtr)lPtr, leftOffset, leftOut.Length, leftIncrement,
+                    (IntPtr)rPtr, rightOffset, rightOut.Length, rightIncrement);
         }
-        #endif
+#endif
 
-        public unsafe void WriteSample16 (int count, ushort [] leftOut, int leftOffset, int leftOutLength, int leftIncrement,
-            ushort [] rightOut, int rightOffset, int rightOutLength, int rightIncrement)
+        public unsafe void WriteSample16(int count, ushort[] leftOut, int leftOffset, int leftOutLength,
+            int leftIncrement,
+            ushort[] rightOut, int rightOffset, int rightOutLength, int rightIncrement)
         {
             fixed (ushort* lPtr = leftOut)
             fixed (ushort* rPtr = rightOut)
-                WriteSample16 (count, (IntPtr) lPtr, leftOffset, leftOut.Length, leftIncrement,
-                    (IntPtr) rPtr, rightOffset, rightOut.Length, rightIncrement);
+                WriteSample16(count, (IntPtr)lPtr, leftOffset, leftOut.Length, leftIncrement,
+                    (IntPtr)rPtr, rightOffset, rightOut.Length, rightIncrement);
         }
 
         public void WriteSample16(int count, IntPtr leftOut, int leftOffset, int leftOutLength, int leftIncrement,
@@ -753,33 +763,33 @@ namespace NFluidsynth
 
             unsafe
             {
-                if (LibFluidsynth.fluid_synth_write_s16(Handle, count, (ushort*) leftOut, leftOffset, leftIncrement,
-                        (ushort*) rightOut, rightOffset, rightIncrement) != 0)
+                if (LibFluidsynth.fluid_synth_write_s16(Handle, count, (ushort*)leftOut, leftOffset, leftIncrement,
+                        (ushort*)rightOut, rightOffset, rightIncrement) != 0)
                 {
                     OnError("16bit sample write operation failed");
                 }
             }
         }
 
-        #if NETCOREAPP
-        public unsafe void WriteSampleFloat (int count, Span<float> leftOut, int leftOffset, int leftIncrement,
+#if NETCOREAPP
+        public unsafe void WriteSampleFloat(int count, Span<float> leftOut, int leftOffset, int leftIncrement,
             Span<float> rightOut, int rightOffset, int rightIncrement)
         {
             fixed (float* lPtr = leftOut)
             fixed (float* rPtr = rightOut)
-                WriteSampleFloat (count, (IntPtr) lPtr, leftOffset, leftOut.Length, leftIncrement,
-                    (IntPtr) rPtr, rightOffset, rightOut.Length, rightIncrement);
-
+                WriteSampleFloat(count, (IntPtr)lPtr, leftOffset, leftOut.Length, leftIncrement,
+                    (IntPtr)rPtr, rightOffset, rightOut.Length, rightIncrement);
         }
-        #endif
+#endif
 
-        public unsafe void WriteSampleFloat(int count, float [] leftOut, int leftOffset, int leftOutLength, int leftIncrement,
-            float [] rightOut, int rightOffset, int rightOutLength, int rightIncrement)
+        public unsafe void WriteSampleFloat(int count, float[] leftOut, int leftOffset, int leftOutLength,
+            int leftIncrement,
+            float[] rightOut, int rightOffset, int rightOutLength, int rightIncrement)
         {
             fixed (float* lPtr = leftOut)
             fixed (float* rPtr = rightOut)
-                WriteSampleFloat (count, (IntPtr) lPtr, leftOffset, leftOut.Length, leftIncrement,
-                    (IntPtr) rPtr, rightOffset, rightOut.Length, rightIncrement);
+                WriteSampleFloat(count, (IntPtr)lPtr, leftOffset, leftOut.Length, leftIncrement,
+                    (IntPtr)rPtr, rightOffset, rightOut.Length, rightIncrement);
         }
 
         public void WriteSampleFloat(int count, IntPtr leftOut, int leftOffset, int leftOutLength, int leftIncrement,
@@ -802,8 +812,8 @@ namespace NFluidsynth
 
             unsafe
             {
-                if (LibFluidsynth.fluid_synth_write_float(Handle, count, (float*) leftOut, leftOffset, leftIncrement,
-                        (float*) rightOut, rightOffset, rightIncrement) != 0)
+                if (LibFluidsynth.fluid_synth_write_float(Handle, count, (float*)leftOut, leftOffset, leftIncrement,
+                        (float*)rightOut, rightOffset, rightIncrement) != 0)
                     OnError("float sample write operation failed");
             }
         }
@@ -816,6 +826,7 @@ namespace NFluidsynth
                 // Why would you want to? No idea!
                 return 0;
             }
+
             return 1 + (count - 1) * increment + offset;
         }
 

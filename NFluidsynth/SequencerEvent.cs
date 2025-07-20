@@ -106,7 +106,7 @@ namespace NFluidsynth
             {
                 ThrowIfDisposed();
 
-                if (LibFluidsynth.LibraryVersion == 2)
+                if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                     return LibFluidsynth.fluid_event_get_value_2(Handle);
                 else 
                     return LibFluidsynth.fluid_event_get_value_3(Handle);
@@ -119,7 +119,7 @@ namespace NFluidsynth
             {
                 ThrowIfDisposed();
 
-                if (LibFluidsynth.LibraryVersion == 2)
+                if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                     return LibFluidsynth.fluid_event_get_program_2(Handle);
                 else
                     return LibFluidsynth.fluid_event_get_program_3(Handle);
@@ -217,7 +217,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
             
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_program_change_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_program_change_3(Handle, channel, val);
@@ -233,7 +233,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
             
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_control_change_2(Handle, channel, control, val);
             else
                 LibFluidsynth.fluid_event_control_change_3(Handle, channel, control, val);
@@ -249,7 +249,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_pitch_wheelsens_2(Handle, channel, value);
             else
                 LibFluidsynth.fluid_event_pitch_wheelsens_3(Handle, channel, value);
@@ -259,7 +259,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_modulation_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_modulation_3(Handle, channel, val);
@@ -269,7 +269,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_sustain_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_sustain_3(Handle, channel, val);
@@ -279,7 +279,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_pan_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_pan_3(Handle, channel, val);
@@ -289,7 +289,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_volume_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_volume_3(Handle, channel, val);
@@ -299,7 +299,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_reverb_send_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_reverb_send_3(Handle, channel, val);
@@ -309,7 +309,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_chorus_send_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_chorus_send_3(Handle, channel, val);
@@ -319,7 +319,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_key_pressure_2(Handle, channel, key, val);
             else
                 LibFluidsynth.fluid_event_key_pressure_3(Handle, channel, key, val);
@@ -329,7 +329,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            if (LibFluidsynth.LibraryVersion == 2)
+            if (LibFluidsynth.LibraryVersion is FluidSynthAbiVersion.V2)
                 LibFluidsynth.fluid_event_channel_pressure_2(Handle, channel, val);
             else
                 LibFluidsynth.fluid_event_channel_pressure_3(Handle, channel, val);
