@@ -32,17 +32,20 @@ namespace NFluidsynth
         public void NoteOn(int channel, int key, int vel)
         {
             ThrowIfDisposed();
-
-            // This can return 1, representing FS not being able to action the command, but this is expected given MIDIs can be arbitrary;
-            LibFluidsynth.fluid_synth_noteon(Handle, channel, key, vel);
+            if (LibFluidsynth.fluid_synth_noteon(Handle, channel, key, vel) != 0)
+            {
+                OnError("noteon operation failed");
+            }
         }
 
         public void NoteOff(int channel, int key)
         {
             ThrowIfDisposed();
-
-            // This can return 1, representing FS not being able to action the command, but this is expected given MIDIs can be arbitrary.
-            LibFluidsynth.fluid_synth_noteoff(Handle, channel, key);
+            // not sure if we should always raise exception, it seems that it also returns FLUID_FAILED for not-on-state note.
+            if (LibFluidsynth.fluid_synth_noteoff(Handle, channel, key) != 0)
+            {
+                OnError("noteoff operation failed");
+            }
         }
 
         public void CC(int channel, int num, int val)
