@@ -38,6 +38,21 @@ namespace NFluidsynth
             }
         }
 
+        /// <summary>
+        /// Attempts to play a particular key on a particular channel at a particular velocity.
+        /// If the velocity of the note is 0, this will function as a NoteOff command instead.
+        /// </summary>
+        /// <param name="channel">The channel (usually between 0-15).</param>
+        /// <param name="key">The note (between 0-127)</param>
+        /// <param name="velocity">The velocity (between 0-127). If 0, this method functions as a NoteOff command.</param>
+        /// <returns>If the note was successfully played (or stopped playing, if velocity was 0).</returns>
+        public bool TryNoteOn(int channel, int key, int velocity)
+        {
+            ThrowIfDisposed();
+
+            return LibFluidsynth.fluid_synth_noteon(Handle, channel, key, velocity) != 0;
+        }
+
         public void NoteOff(int channel, int key)
         {
             ThrowIfDisposed();
@@ -47,6 +62,20 @@ namespace NFluidsynth
                 OnError("noteoff operation failed");
             }
         }
+
+        /// <summary>
+        /// Attempts to stop playing a particular key on a particular channel.
+        /// </summary>
+        /// <param name="channel">The channel (usually between 0-15).</param>
+        /// <param name="key">The note (between 0-127)</param>
+        /// <returns>If the note was successfully stopped playing.</returns>
+        public bool TryNoteOff(int channel, int key)
+        {
+            ThrowIfDisposed();
+
+            return LibFluidsynth.fluid_synth_noteoff(Handle, channel, key) != 0;
+        }
+
 
         public void CC(int channel, int num, int val)
         {
