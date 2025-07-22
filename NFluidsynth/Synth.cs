@@ -50,7 +50,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            return LibFluidsynth.fluid_synth_noteon(Handle, channel, key, velocity) != 0;
+            return LibFluidsynth.fluid_synth_noteon(Handle, channel, key, velocity) == 0;
         }
 
         public void NoteOff(int channel, int key)
@@ -73,7 +73,7 @@ namespace NFluidsynth
         {
             ThrowIfDisposed();
 
-            return LibFluidsynth.fluid_synth_noteoff(Handle, channel, key) != 0;
+            return LibFluidsynth.fluid_synth_noteoff(Handle, channel, key) == 0;
         }
 
 
