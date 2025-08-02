@@ -67,25 +67,15 @@ internal static partial class LibFluidsynth
 
     private static IntPtr TryLoadLinux(System.Reflection.Assembly assembly, DllImportSearchPath? path)
     {
-        foreach (var name in LINUX_FLUIDSYNTH_ABI_V3_DLL_NAMES)
-        {
-            if (!NativeLibrary.TryLoad(name, assembly, path, out var handle))
-                continue;
-
+        if (TryLoadDll(assembly, path, LINUX_FLUIDSYNTH_ABI_V3_DLL_NAMES, out var handle)) {
             LibraryVersion = FluidSynthAbiVersion.V3;
 
             return handle;
         }
 
-        foreach (var name in LINUX_FLUIDSYNTH_ABI_V2_DLL_NAMES)
-        {
-            if (!NativeLibrary.TryLoad(name, assembly, path, out var handle))
-                continue;
+        _ = TryLoadDll(assembly, path, LINUX_FLUIDSYNTH_ABI_V2_DLL_NAMES, out handle);
 
-            return handle;
-        }
-
-        return IntPtr.Zero;
+        return handle;
     }
 
     private static IntPtr TryLoadOsx(System.Reflection.Assembly assembly, DllImportSearchPath? path)
@@ -98,25 +88,15 @@ internal static partial class LibFluidsynth
 
     private static IntPtr TryLoadWindows(System.Reflection.Assembly assembly, DllImportSearchPath? path)
     {
-        foreach (var name in WINDOWS_FLUIDSYNTH_ABI_V3_DLL_NAMES)
-        {
-            if (!NativeLibrary.TryLoad(name, assembly, path, out var handle))
-                continue;
-
+        if (TryLoadDll(assembly, path, WINDOWS_FLUIDSYNTH_ABI_V3_DLL_NAMES, out var handle)) {
             LibraryVersion = FluidSynthAbiVersion.V3;
 
             return handle;
         }
 
-        foreach (var name in WINDOWS_FLUIDSYNTH_ABI_V2_DLL_NAMES)
-        {
-            if (!NativeLibrary.TryLoad(name, assembly, path, out var handle))
-                continue;
+        _ = TryLoadDll(assembly, path, WINDOWS_FLUIDSYNTH_ABI_V2_DLL_NAMES, out handle);
 
-            return handle;
-        }
-
-        return IntPtr.Zero;
+        return handle;
     }
 
     private static bool TryLoadDll(
