@@ -22,10 +22,9 @@ namespace NFluidsynth.Sample
             {
                 using (var syn = new Synth(settings))
                 {
-                    foreach (var arg in from arg in args where SoundFont.IsSoundFont(arg) select arg)
-                    {
-                        syn.LoadSoundFont(arg, true);
-                    }
+                    foreach (var arg in args)
+                        if (SoundFont.IsSoundFont(arg))
+                            syn.LoadSoundFont(arg, true);
 
                     if (syn.FontCount == 0 && !LoadDefaultSoundfont(syn))
                         return;
