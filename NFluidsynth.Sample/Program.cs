@@ -13,10 +13,6 @@ namespace NFluidsynth.Sample
 
         private const string WINDOWS_GM_DEFAULT_SOUNDFONT = @"C:\WINDOWS\SYSTEM32\DRIVERS\GM.DLS";
 
-        // Is this even correct? Who knows. This is pulled from a random forum post.
-        // Someone with a Mac can check.
-        // Of course this is Apple so it probably changes directories randomly 
-        // just to mess with developers.
         private const string OSX_GS_DEFAULT_SOUNDFONT =
             "/System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls";
 
