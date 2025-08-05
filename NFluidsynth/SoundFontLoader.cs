@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using NFluidsynth.Native;
 using static NFluidsynth.Native.LibFluidsynth;
 
 namespace NFluidsynth
@@ -68,7 +69,7 @@ namespace NFluidsynth
 
         public unsafe void SetCallbacks(SoundFontLoaderCallbacks callbacks)
         {
-            if (LibraryVersion == 2)
+            if (LibraryVersion is FluidSynthAbiVersion.V2)
             {
                 fluid_sfloader_set_callbacks(handle,
                     Utility.PassDelegatePointer(callbacks.Open, out _open),
