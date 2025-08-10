@@ -2,6 +2,10 @@
 
 ## Master
 
+## 0.2.1
+
+- Added v3 ABI support for macOS.
+
 ## 0.2.0
 
 - Added `Synth.TryNoteOn` and `Synth.TryNoteOff`, which return the status code instead of throwing.
