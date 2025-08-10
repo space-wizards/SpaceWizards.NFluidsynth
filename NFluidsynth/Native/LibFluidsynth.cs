@@ -20,7 +20,8 @@ internal static partial class LibFluidsynth
     //  but will try the general name anyway just in case.
     private static readonly string[] LINUX_FLUIDSYNTH_ABI_V3_DLL_NAMES = ["libfluidsynth.so.3"];
     private static readonly string[] LINUX_FLUIDSYNTH_ABI_V2_DLL_NAMES = ["libfluidsynth.so.2", "libfluidsynth.so"];
-    private static readonly string[] OSX_FLUIDSYNTH_DLL_NAMES = ["libfluidsynth.dylib"];
+    private static readonly string[] OSX_FLUIDSYNTH_ABI_V2_DLL_NAMES = ["libfluidsynth.dylib"];
+    private static readonly string[] OSX_FLUIDSYNTH_ABI_V3_DLL_NAMES = ["libfluidsynth.3.dylib"];
 
     private static readonly string[] WINDOWS_FLUIDSYNTH_ABI_V3_DLL_NAMES = ["libfluidsynth-3"];
     private static readonly string[] WINDOWS_FLUIDSYNTH_ABI_V2_DLL_NAMES =
@@ -80,12 +81,17 @@ internal static partial class LibFluidsynth
 
     private static IntPtr TryLoadOsx(System.Reflection.Assembly assembly, DllImportSearchPath? path)
     {
-        _ = TryLoadDll(assembly, path, OSX_FLUIDSYNTH_DLL_NAMES, out var handle);
+        if (TryLoadDll(assembly, path, OSX_FLUIDSYNTH_ABI_V3_DLL_NAMES, out var handle)) {
+            LibraryVersion = FluidSynthAbiVersion.V3;
+
+            return handle;
+        }
+
+        _ = TryLoadDll(assembly, path, OSX_FLUIDSYNTH_ABI_V2_DLL_NAMES, out handle);
 
         return handle;
     }
-
-
+    
     private static IntPtr TryLoadWindows(System.Reflection.Assembly assembly, DllImportSearchPath? path)
     {
         if (TryLoadDll(assembly, path, WINDOWS_FLUIDSYNTH_ABI_V3_DLL_NAMES, out var handle)) {
