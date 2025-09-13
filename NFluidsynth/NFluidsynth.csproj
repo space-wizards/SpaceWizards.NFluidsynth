@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net7.0;net9.0</TargetFrameworks>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <AssemblyName>SpaceWizards.NFluidsynth</AssemblyName>
     <RootNamespace>NFluidsynth</RootNamespace>
     <IncludeSymbols>true</IncludeSymbols>

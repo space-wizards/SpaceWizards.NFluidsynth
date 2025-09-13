@@ -2,6 +2,8 @@
 
 ## Master
 
+## 0.2.2
+
 - Moved TFM back to support a minimum of .NET 7.
 
 ## 0.2.1
