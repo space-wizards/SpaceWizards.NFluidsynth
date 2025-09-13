@@ -2,6 +2,8 @@
 
 ## Master
 
+- Moved TFM back to support a minimum of .NET 7.
+
 ## 0.2.1
 
 - Added v3 ABI support for macOS.

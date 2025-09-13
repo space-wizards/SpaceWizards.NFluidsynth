@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net7.0;net9.0</TargetFrameworks>
     <Version>0.2.1</Version>
     <AssemblyName>SpaceWizards.NFluidsynth</AssemblyName>
     <RootNamespace>NFluidsynth</RootNamespace>
     <IncludeSymbols>true</IncludeSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>12</LangVersion>
     
     <!-- Temporary until more things are documented properly. -->
     <NoWarn>CS1591</NoWarn>
